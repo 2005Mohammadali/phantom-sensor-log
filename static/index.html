@@ -1,0 +1,323 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Phantom Sensor Log</title>
+    <style>
+        :root {
+            --bg: #0b0a10;
+            --panel: #15131f;
+            --line: #2a2540;
+            --txt: #d8d2e8;
+            --dim: #8a84a0;
+            --gold: #ff9d3d;
+            --violet: #b18cff;
+            --red: #ff4d6d;
+            --blue: #7fb3ff
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at 20% 0, #1a1426, var(--bg) 60%);
+            color: var(--txt);
+            font-family: Georgia, serif
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1rem
+        }
+
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .8rem;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--gold);
+            font-size: 1.6rem;
+            letter-spacing: .05em
+        }
+
+        small,
+        .dim {
+            color: var(--dim)
+        }
+
+        button {
+            background: var(--gold);
+            border: 0;
+            padding: .5rem .9rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer
+        }
+
+        button.ghost {
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold)
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 1rem;
+            margin-top: 1rem
+        }
+
+        @media(max-width:800px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: .8rem 1rem
+        }
+
+        .panel h2 {
+            margin: .1rem 0 .5rem;
+            font-size: 1rem;
+            color: var(--violet)
+        }
+
+        svg {
+            width: 100%;
+            height: 90px;
+            display: block
+        }
+
+        .badges span {
+            display: inline-block;
+            margin: .2rem .3rem 0 0;
+            padding: .15rem .6rem;
+            border: 1px solid var(--line);
+            border-radius: 99px;
+            font-size: .8rem
+        }
+
+        .tier {
+            font-weight: bold;
+            font-size: .85rem
+        }
+
+        .Whisper {
+            color: var(--blue)
+        }
+
+        .Poltergeist {
+            color: var(--gold)
+        }
+
+        .Banshee {
+            color: var(--red)
+        }
+
+        .tabs {
+            display: flex;
+            gap: .4rem;
+            margin-bottom: .5rem
+        }
+
+        .tabs button {
+            background: transparent;
+            color: var(--dim);
+            border: 1px solid var(--line)
+        }
+
+        .tabs button.on {
+            color: #000;
+            background: var(--gold);
+            border-color: var(--gold)
+        }
+
+        .list {
+            height: 62vh;
+            min-height: 320px;
+            overflow-y: auto;
+            padding-right: .3rem
+        }
+
+        .list::-webkit-scrollbar {
+            width: 6px
+        }
+
+        .list::-webkit-scrollbar-thumb {
+            background: var(--line);
+            border-radius: 3px
+        }
+
+        .card {
+            border: 1px solid var(--line);
+            border-left: 3px solid var(--gold);
+            border-radius: 6px;
+            padding: .5rem .7rem;
+            margin-bottom: .5rem;
+            cursor: pointer;
+            background: #110f19
+        }
+
+        .card.Whisper {
+            border-left-color: var(--blue)
+        }
+
+        .card.Banshee {
+            border-left-color: var(--red)
+        }
+
+        .card p {
+            margin: .3rem 0 0;
+            line-height: 1.45;
+            font-size: .92rem
+        }
+
+        .card .tale {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden
+        }
+
+        .card.open .tale {
+            display: block;
+            -webkit-line-clamp: unset
+        }
+
+        .card .ev {
+            display: none;
+            margin-top: .4rem;
+            font-size: .78rem;
+            color: var(--dim)
+        }
+
+        .card.open .ev {
+            display: block
+        }
+
+        .featured {
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            padding: .7rem;
+            background: #1b1522
+        }
+
+        .featured p {
+            line-height: 1.5
+        }
+
+        #dawnbox {
+            display: none;
+            margin-top: 1rem
+        }
+
+        .pulse {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold);
+            margin-right: .4rem;
+            animation: p 1.2s infinite
+        }
+
+        @keyframes p {
+            50% {
+                opacity: .2
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div>
+                <h1>🕯️ Phantom Sensor Log</h1><small>100% local. No cloud. The ghost lives on this machine.</small>
+            </div>
+            <div><span id="status" class="dim"></span>
+                <button onclick="summon()">Summon</button> <button class="ghost" onclick="dawn()">Dawn Report</button>
+            </div>
+        </header>
+
+        <div id="dawnbox" class="panel">
+            <h2>Dawn Report <button class="ghost" style="float:right;padding:.1rem .5rem"
+                    onclick="this.closest('#dawnbox').style.display='none'">close</button></h2>
+            <div id="dawn"></div>
+        </div>
+
+        <div class="grid">
+            <div>
+                <div class="panel">
+                    <h2>Pulse (CPU, last ~15 min)</h2>
+                    <svg id="spark" viewBox="0 0 300 80" preserveAspectRatio="none"></svg>
+                    <div class="badges" id="badges"></div>
+                </div>
+                <div class="panel" style="margin-top:1rem">
+                    <h2>Latest haunting</h2>
+                    <div id="featured" class="featured dim">The house is quiet.</div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="tabs">
+                    <button id="t1" class="on" onclick="tab(1)">Hauntings</button>
+                    <button id="t2" onclick="tab(2)">Ofrenda 🌼</button>
+                </div>
+                <div class="list" id="list"></div>
+            </div>
+        </div>
+
+        <script>
+            const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+            let data = null, cur = 1, lastKey = "", opened = new Set();
+            function tab(n) { cur = n; t1.className = n == 1 ? 'on' : ''; t2.className = n == 2 ? 'on' : ''; lastKey = ""; render(); }
+            function toggle(id) { opened.has(id) ? opened.delete(id) : opened.add(id); lastKey = ""; render(); }
+            function render() {
+                if (!data) return;
+                const st = document.getElementById('status');
+                st.innerHTML = (data.thinking ? '<span class="pulse"></span>the ghost is whispering... ' : '') + esc(data.status) + ' ';
+                const s = data.samples, pts = s.map((x, i) => `${i * 300 / Math.max(s.length - 1, 1)},${80 - Math.min(x.cpu, 100) * 0.78}`).join(' ');
+                spark.innerHTML = `<polyline points="${pts}" fill="none" stroke="#ff9d3d" stroke-width="1.5"/>`;
+                badges.innerHTML = ['Whisper', 'Poltergeist', 'Banshee'].map(t => { const c = (data.counts.find(x => x.tier == t) || { c: 0 }).c; return `<span class="${t}">${t}: ${c}</span>` }).join('') + '<span class="dim">last 24h</span>';
+                const h = data.hauntings[0];
+                featured.className = 'featured';
+                featured.innerHTML = h ? `<span class="tier ${esc(h.tier)}">${esc(h.tier)}</span> <small>${new Date(h.ts * 1000).toLocaleString()}</small><p>${esc(h.tale)}</p><small>Evidence: ${esc(h.facts)}</small>` : 'The house is quiet.';
+                const key = cur + JSON.stringify([data.hauntings.length, data.ofrenda.length, data.hauntings[0] && data.hauntings[0].id, data.ofrenda[0] && data.ofrenda[0].id, [...opened]]);
+                if (key === lastKey) return; lastKey = key;
+                const scroll = list.scrollTop;
+                list.innerHTML = cur == 1
+                    ? (data.hauntings.slice(1).map(x => `<div class="card ${esc(x.tier)} ${opened.has('h' + x.id) ? 'open' : ''}" onclick="toggle('h${x.id}')">
+       <span class="tier ${esc(x.tier)}">${esc(x.tier)}</span> <small>${new Date(x.ts * 1000).toLocaleString()}</small>
+       <p class="tale">${esc(x.tale)}</p><div class="ev">Evidence: ${esc(x.facts)}</div></div>`).join('') || '<small>No earlier hauntings.</small>')
+                    : (data.ofrenda.map(o => `<div class="card ${opened.has('o' + o.id) ? 'open' : ''}" onclick="toggle('o${o.id}')">
+       🕯️ <b>${esc(o.name)}</b> <small>lived ${(o.lifespan_s / 60).toFixed(1)} min · ${o.rss_mb.toFixed(0)} MB</small>
+       <p class="tale"><i>${esc(o.epitaph)}</i></p></div>`).join('') || '<small>No departures yet.</small>');
+                list.scrollTop = scroll;
+            }
+            async function refresh() { try { data = await (await fetch('/api/state')).json(); render(); } catch (e) { } }
+            async function summon() { await fetch('/api/summon', { method: 'POST' }); refresh(); }
+            async function dawn() {
+                dawnbox.style.display = 'block'; document.getElementById('dawn').textContent = 'The ghost is gathering the night...';
+                const d = await (await fetch('/api/dawn')).json();
+                document.getElementById('dawn').innerHTML = `<small>${esc(JSON.stringify(d.counts))}</small><p>${esc(d.tale)}</p>`;
+            }
+            refresh(); setInterval(refresh, 5000);
+        </script>
+    </div>
+</body>
+
+</html>

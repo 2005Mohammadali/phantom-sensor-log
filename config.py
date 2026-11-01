@@ -1,0 +1,15 @@
+OLLAMA_URL = "http://localhost:11434/api/generate"
+MODEL = "gemma3:4b"        # change to a newer/larger Gemma if your PC handles it
+SAMPLE_SECONDS = 10        # how often we look at the machine
+BASELINE_SAMPLES = 30      # ~3 minutes of "normal" learned at startup
+COOLDOWN = 600              # min seconds between automatic hauntings
+ESCALATE_COOLDOWN = 60       # a Banshee may break the cooldown after this long
+MAX_HAUNTS_PER_DAY = 24
+EPITAPH_COOLDOWN = 45        # min seconds between epitaphs
+SAME_NAME_COOLDOWN = 600     # one card per process name per 10 min
+KEEP_SAMPLE_HOURS = 24
+WHISPER, POLTERGEIST, BANSHEE = 5, 10, 20   # score thresholds (tune later)
+MIN_LIFESPAN = 20          # seconds a process must live to get an ofrenda card
+MIN_RSS_MB = 30            # ...and memory it must have used
+USE_TABPFN = True         # flip to True in Step 9
+DB_PATH = "phantom.db"
