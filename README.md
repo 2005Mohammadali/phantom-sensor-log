@@ -81,3 +81,5 @@ Telemetry is stored only in a local `phantom.db` (SQLite) file, which is git-ign
 Windows 11 with gemma3:4b
 
 ## License
+[MIT License](LICENSE)
+
